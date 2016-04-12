@@ -4,18 +4,24 @@
 	<meta charset="UTF-8">
 	<title>懵逼</title>
 	<style>
-		ul{display: flex; list-style: none; height: 500px; min-height: 1px;zoom:1;}
-    	ul:after{content:"020"; display: block;height: 0; clear: both;visibility:hidden}
+		ul{list-style: none; height: 500px; min-height: 1px;zoom:1; width: 1024px; margin: 50px auto; text-align: center; padding: 0;}
+    	ul:after{content:"020"; display: inline-block; height: 0; clear: both;visibility:hidden}
 		li{width: 41px; position: relative; float: left;}
 		li span{background-image: url(mb.jpg); background-repeat: repeat-y; background-position: center top; display: block; position: absolute; left: 0; bottom: 0; width: 100%; height: 41px;}
 		li.current:after{content: ""; position: absolute; width: 20px; height: 20px; background-color: red; bottom: -20px; left: 10px;}
+		li.sorted:after{content: ""; position: absolute; width: 20px; height: 20px; background-color: green; bottom: -20px; left: 10px;}
 	</style>
 </head>
-<body>
+<body ms-controller="mb">
 	<h1>懵逼大法好</h1>
-	<div class="mbmap" ms-controller="mb">
-		<ul ms-css-height="list.length * 41 + 'px'">
-			<li ms-repeat="list"  ms-class-1="current: $index === current"><span ms-css-height="el * 41 + 'px'"></span></li>
+	<div class="setting">
+		尺寸：<input type="number" ms-duplex-number="size" min="0" max="100">
+		速度：<input type="number" ms-duplex-number="speed" min="100" max="5000">
+		<input type="button" value="开始懵逼排序" ms-click="getSort" ms-attr-disabled="isSort">
+	</div>
+	<div class="mbmap">
+		<ul ms-css-height="list.length * 41 + 'px'" ms-css-width="list.length * 41 + 'px'">
+			<li ms-css-height="list.length * 41 + 'px'" class="current" ms-repeat="list"  ms-class-1="current: $index === current" ms-class-2="sorted: $index >= last"><span ms-css-height="el * 41 + 'px'"></span></li>
 		</ul>
 	</div>
 	<script src="avalon.mobile.min.js"></script>

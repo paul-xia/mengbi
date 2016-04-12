@@ -2,35 +2,56 @@
 	var vm = avalon.define({
 		$id: 'mb',
 		list: [],
-		current: 0
+		current: -1,
+		size: 0,
+		speed: 200,
+		isSort: false,
+		getList: function(){
+			vm.list.clear();
+			for (var i = 1; i <= vm.size; i++) {
+				vm.list.push(getRandomNum(1, vm.size));
+			}
+			vm.last = vm.size;
+		},
+		getSort: function(){
+			if(!vm.last) vm.last = vm.list.length;
+			vm.current = 0;
+			sortIt();
+			vm.isSort = true;
+		},
+		last: 0
 	});
-	(function(size) {
-		for (var i = 1; i <= size; i++) {
-			vm.list.push(getRandomNum(1, size));
+	var timer;
+	vm.$watch('size', function(a){
+		console.log(a)
+		if(timer){
+			clearTimeout(timer);
 		}
-	})(15);
-	var last = vm.list.length;
-	sortIt();
+		timer = setTimeout(function(){
+			vm.getList();
+			vm.isSort = false;
+		}, 1000);
+	});
 	function sortIt(){
 		if(vm.list[vm.current] > vm.list[vm.current + 1]) {
 			var b = vm.list[vm.current];
 			vm.list.set(vm.current, vm.list[vm.current + 1]);
 			vm.list.set(vm.current + 1, b);
 		}
-		if(!last) {
+		if(vm.last === 0) {//结束
 			vm.current = -1;
 			return;
 		}
 		setTimeout(function(){
-			if(vm.current > last) {
+			if(vm.current + 1 === vm.last) {
 				vm.current = 0;
+				vm.last -- ;
 				sortIt();
-				last -- ;
 			} else {
 				vm.current ++;
 				sortIt();
 			}
-		}, 10);
+		}, vm.speed);
 	}
 	function getRandomNum(Min, Max) {
 		var Range = Max - Min;
